@@ -7,13 +7,14 @@ class Process:
         self.burst_time = burst_time
         self.priority = priority
 
-        # Remaining burst time (important later for RR and RL)
         self.remaining_time = burst_time
 
-        # Metrics
         self.completion_time = 0
         self.waiting_time = 0
         self.turnaround_time = 0
+
+        # Fairness tracking
+        self.age = 0
 
     def __str__(self):
 

@@ -24,3 +24,16 @@ def context_switch_count(timeline):
         return 0
 
     return len(timeline) - 1
+
+def max_waiting_time(processes):
+
+    return max(
+        p.waiting_time
+        for p in processes
+    )
+def average_age(processes):
+
+    return sum(
+        p.age
+        for p in processes
+    ) / len(processes)

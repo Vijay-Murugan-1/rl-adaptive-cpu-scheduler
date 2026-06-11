@@ -4,7 +4,7 @@ from rl_environment.scheduler_env import CPUSchedulerEnv
 
 
 env = CPUSchedulerEnv(
-    num_processes=5
+    num_processes=10
 )
 
 model = PPO.load(

@@ -6,7 +6,8 @@ from core.metrics import (
     average_waiting_time,
     average_turnaround_time,
     throughput,
-    context_switch_count
+    context_switch_count,
+    max_waiting_time
 )
 
 from workloads.generator import generate_workload
@@ -22,7 +23,8 @@ from rl_environment.scheduler_env import CPUSchedulerEnv
 # Generate workload for classical schedulers
 processes = generate_workload(
     num_processes=10,
-    seed=42
+    seed=42,
+    workload_type="starvation"
 )
 
 # Classical schedulers
@@ -55,6 +57,10 @@ for name, scheduler in schedulers.items():
         completed_processes
     )
 
+    max_wt = max_waiting_time(
+        completed_processes
+    )
+
     total_time = completed_processes[-1].completion_time
 
     tp = throughput(
@@ -69,6 +75,7 @@ for name, scheduler in schedulers.items():
     results.append({
         "algorithm": name,
         "avg_wt": round(avg_wt, 2),
+        "max_wt": round(max_wt, 2),
         "avg_tat": round(avg_tat, 2),
         "throughput": round(tp, 2),
         "context_switches": cs
@@ -83,7 +90,7 @@ model = PPO.load(
 )
 
 env = CPUSchedulerEnv(
-    num_processes=5
+    num_processes=10
 )
 
 state, info = env.reset()
@@ -119,6 +126,10 @@ avg_tat = average_turnaround_time(
     completed_processes
 )
 
+max_wt = max_waiting_time(
+    completed_processes
+)
+
 total_time = completed_processes[-1].completion_time
 
 tp = throughput(
@@ -133,10 +144,11 @@ cs = context_switch_count(
 results.append({
     "algorithm": "PPO",
     "avg_wt": round(avg_wt, 2),
+    "max_wt": round(max_wt, 2),
     "avg_tat": round(avg_tat, 2),
     "throughput": round(tp, 2),
     "context_switches": cs,
-    "reward": total_reward
+    "reward": round(total_reward, 2)
 })
 
 # ==========================
@@ -148,21 +160,23 @@ print("\nRL vs Classical Comparison\n")
 print(
     f"{'Algorithm':<15}"
     f"{'Avg WT':<12}"
+    f"{'Max WT':<12}"
     f"{'Avg TAT':<12}"
     f"{'Throughput':<12}"
-    f"{'Context Sw':<12}"
+    f"{'Ctx Sw':<12}"
 )
 
-print("-" * 65)
+print("-" * 75)
 
 for result in results:
 
     print(
         f"{result['algorithm']:<15}"
-        f"{result.get('avg_wt', '-'): <12}"
-        f"{result.get('avg_tat', '-'): <12}"
-        f"{result.get('throughput', '-'): <12}"
-        f"{result.get('context_switches', '-'): <12}"
+        f"{result['avg_wt']:<12}"
+        f"{result['max_wt']:<12}"
+        f"{result['avg_tat']:<12}"
+        f"{result['throughput']:<12}"
+        f"{result['context_switches']:<12}"
     )
 
-print("\nPPO Total Reward:", total_reward)
+print("\nPPO Total Reward:", round(total_reward, 2))

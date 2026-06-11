@@ -6,7 +6,7 @@ from rl_environment.scheduler_env import CPUSchedulerEnv
 print("Creating Environment...")
 
 env = CPUSchedulerEnv(
-    num_processes=5
+    num_processes=10
 )
 
 print("Creating PPO Model...")
@@ -20,7 +20,7 @@ model = PPO(
 print("Starting Training...")
 
 model.learn(
-    total_timesteps=10000
+    total_timesteps=100000
 )
 model.save(
     "ppo_cpu_scheduler"
