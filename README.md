@@ -1,31 +1,34 @@
 # RL-Based Adaptive CPU Scheduler
 
-A Reinforcement Learning based CPU Scheduling simulator that compares traditional scheduling algorithms with a PPO-based adaptive scheduler.
+A Reinforcement Learning based CPU Scheduling simulator that compares traditional CPU scheduling algorithms with PPO-based adaptive schedulers.
 
 ## Features
 
-* FCFS Scheduling
-* SJF Scheduling
-* Round Robin Scheduling
-* Priority Scheduling
-* Custom Gymnasium Environment
-* PPO Agent using Stable-Baselines3
-* Performance Metrics:
+- FCFS (First Come First Serve)
+- SJF (Shortest Job First)
+- Round Robin
+- Priority Scheduling
+- SRTF (Shortest Remaining Time First)
+- PPO-based Non-Preemptive Scheduler
+- PPO-based Preemptive Scheduler
+- Custom Gymnasium Environments
+- Stable-Baselines3 Integration
 
-  * Average Waiting Time
-  * Average Turnaround Time
-  * Throughput
-  * Context Switch Count
-* Gantt Chart Visualization
-* Scheduler Comparison Graphs
+## Performance Metrics
+
+- Average Waiting Time
+- Maximum Waiting Time
+- Average Turnaround Time
+- Throughput
+- Context Switch Count
 
 ## Tech Stack
 
-* Python
-* Gymnasium
-* Stable-Baselines3
-* NumPy
-* Matplotlib
+- Python
+- Gymnasium
+- Stable-Baselines3
+- NumPy
+- Matplotlib
 
 ## Project Structure
 
@@ -47,7 +50,7 @@ experiments/
 python -m experiments.compare_schedulers
 ```
 
-### Train PPO Agent
+### Train PPO Agent (Non-Preemptive)
 
 ```bash
 python -m rl_training.train_ppo
@@ -59,19 +62,58 @@ python -m rl_training.train_ppo
 python -m rl_training.evaluate_agent
 ```
 
-### Compare RL vs Classical Schedulers
+### Compare PPO vs Classical Schedulers
 
 ```bash
 python -m rl_training.compare_rl_vs_classical
 ```
 
-## Future Improvements
+### Train PPO Agent (Preemptive)
 
-* Dynamic Process Arrivals
-* Multi-Core Scheduling
-* Advanced Reward Functions
-* DQN and A2C Integration
-* Interactive Dashboard
+```bash
+python -m rl_training.train_ppo_preemptive
+```
+
+### Evaluate Preemptive PPO Agent
+
+```bash
+python -m rl_training.evaluate_preemptive_agent
+```
+
+### Compare PPO vs SRTF
+
+```bash
+python -m rl_training.compare_preemptive_rl_vs_srtf
+```
+
+## Current Results
+
+### Non-Preemptive Environment
+
+| Algorithm | Avg WT | Avg TAT |
+|-----------|--------|---------|
+| SJF | 10.7 | 18.9 |
+| PPO | 10.7 | 18.9 |
+
+PPO converged close to SJF after training.
+
+### Preemptive Environment
+
+| Algorithm | Avg WT | Avg TAT |
+|-----------|--------|---------|
+| SRTF | 5.8 | 14.0 |
+| PPO | 10.1 | 18.3 |
+
+PPO performance improved significantly through reward engineering and extended training.
+
+## Future Work
+
+- Fairness-Aware Reward Functions
+- Starvation Reduction Strategies
+- Multi-Core CPU Scheduling
+- Dynamic Workload Generation
+- DQN and A2C Implementations
+- Interactive Dashboard
 
 ## Author
 
