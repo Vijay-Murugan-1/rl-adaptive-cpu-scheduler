@@ -9,26 +9,13 @@ def generate_workload(
     max_burst_time=10,
     max_priority=5,
     seed=None,
-    workload_type="random"
+    workload_type="normal"
 ):
 
     if seed is not None:
         random.seed(seed)
 
     processes = []
-
-    starvation_bursts = [
-        1, 1, 1, 1, 1,
-        1, 1,
-        20, 25, 30
-    ]
-
-    bursty_bursts = [
-        2, 3, 2, 4,
-        15, 18,
-        1, 2,
-        25, 30
-    ]
 
     for pid in range(1, num_processes + 1):
 
@@ -37,17 +24,84 @@ def generate_workload(
             max_arrival_time
         )
 
-        if workload_type == "starvation":
+        # =====================
+        # NORMAL
+        # =====================
 
-            burst_time = starvation_bursts[
-                (pid - 1) % len(starvation_bursts)
-            ]
+        if workload_type == "normal":
 
-        elif workload_type == "bursty":
+            burst_time = random.randint(
+                1,
+                max_burst_time
+            )
 
-            burst_time = bursty_bursts[
-                (pid - 1) % len(bursty_bursts)
-            ]
+        # =====================
+        # CPU-BOUND
+        # Long jobs dominate
+        # =====================
+
+        elif workload_type == "cpu_bound":
+
+            burst_time = random.randint(
+                max_burst_time // 2,
+                max_burst_time
+            )
+
+        # =====================
+        # IO-BOUND
+        # Mostly short jobs
+        # =====================
+
+        elif workload_type == "io_bound":
+
+            burst_time = random.randint(
+                1,
+                max(2, max_burst_time // 4)
+            )
+
+        # =====================
+        # STARVATION
+        # Few huge jobs + many tiny jobs
+        # =====================
+
+        elif workload_type == "starvation":
+
+            if pid <= 7:
+
+                burst_time = 1
+
+            elif pid == 8:
+
+                burst_time = 20
+
+            elif pid == 9:
+
+                burst_time = 25
+
+            else:
+
+                burst_time = 30
+
+        # =====================
+        # MIXED
+        # Random combination
+        # =====================
+
+        elif workload_type == "mixed":
+
+            if random.random() < 0.5:
+
+                burst_time = random.randint(
+                    1,
+                    3
+                )
+
+            else:
+
+                burst_time = random.randint(
+                    8,
+                    max_burst_time
+                )
 
         else:
 

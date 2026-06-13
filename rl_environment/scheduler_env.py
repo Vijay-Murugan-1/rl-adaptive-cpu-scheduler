@@ -7,11 +7,13 @@ from workloads.generator import generate_workload
 
 class CPUSchedulerEnv(gym.Env):
 
-    def __init__(self, num_processes=10):
+    def __init__(self, num_processes=10,workload_type="starvation"):
 
         super().__init__()
 
         self.num_processes = num_processes
+        
+        self.workload_type = workload_type
 
         self.processes = []
 
@@ -59,7 +61,7 @@ class CPUSchedulerEnv(gym.Env):
         self.processes = generate_workload(
             num_processes=self.num_processes,
             seed=42,
-            workload_type="starvation"
+            workload_type=self.workload_type
         )
 
         self.current_time = 0

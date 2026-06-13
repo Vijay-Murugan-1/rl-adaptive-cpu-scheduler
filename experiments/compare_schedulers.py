@@ -41,7 +41,7 @@ print(
     f"{'Context Switches':<15}"
 )
 
-print("-" * 70)
+print("-" * 75)
 results = []
 for name, scheduler in schedulers.items():
 
