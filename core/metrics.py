@@ -37,3 +37,44 @@ def average_age(processes):
         p.age
         for p in processes
     ) / len(processes)
+
+def starvation_count(
+    processes,
+    threshold=20
+):
+
+    return sum(
+        1
+        for p in processes
+        if p.waiting_time > threshold
+    )
+
+def fairness_index(processes):
+
+    waiting_times = [
+        p.waiting_time
+        for p in processes
+    ]
+
+    if len(waiting_times) == 0:
+
+        return 0
+
+    numerator = (
+        sum(waiting_times) ** 2
+    )
+
+    denominator = (
+        len(waiting_times)
+        *
+        sum(
+            wt ** 2
+            for wt in waiting_times
+        )
+    )
+
+    if denominator == 0:
+
+        return 1
+
+    return numerator / denominator

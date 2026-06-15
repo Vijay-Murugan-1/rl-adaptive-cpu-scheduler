@@ -1,3 +1,5 @@
+import random
+
 import gymnasium as gym
 
 from gymnasium import spaces
@@ -7,13 +9,20 @@ from workloads.generator import generate_workload
 
 class CPUSchedulerEnv(gym.Env):
 
-    def __init__(self, num_processes=10,workload_type="starvation"):
+    def __init__(
+        self,
+        num_processes=10,
+        workload_type="starvation",
+        randomize_workload=False
+    ):
 
         super().__init__()
 
         self.num_processes = num_processes
-        
+
         self.workload_type = workload_type
+
+        self.randomize_workload = randomize_workload
 
         self.processes = []
 
@@ -58,11 +67,31 @@ class CPUSchedulerEnv(gym.Env):
 
         super().reset(seed=seed)
 
-        self.processes = generate_workload(
-            num_processes=self.num_processes,
-            seed=42,
-            workload_type=self.workload_type
-        )
+        if self.randomize_workload:
+
+            selected_workload = random.choice(
+                [
+                    "normal",
+                    "cpu_bound",
+                    "io_bound",
+                    "starvation",
+                    "mixed"
+                ]
+            )
+
+            self.processes = generate_workload(
+                num_processes=self.num_processes,
+                seed=None,
+                workload_type=selected_workload
+            )
+
+        else:
+
+            self.processes = generate_workload(
+                num_processes=self.num_processes,
+                seed=42,
+                workload_type=self.workload_type
+            )
 
         self.current_time = 0
 

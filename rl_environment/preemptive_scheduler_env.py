@@ -88,7 +88,6 @@ class PreemptiveCPUSchedulerEnv(gym.Env):
 
             self.update_ready_queue()
 
-
         return self.get_state(), {}
 
     def get_state(self):
@@ -169,6 +168,8 @@ class PreemptiveCPUSchedulerEnv(gym.Env):
 
         self.update_ready_queue()
 
+        reward = 0
+
         if selected_process.remaining_time == 0:
 
             selected_process.completion_time = (
@@ -193,9 +194,16 @@ class PreemptiveCPUSchedulerEnv(gym.Env):
                 selected_process
             )
 
+            reward += 10
+
         total_waiting = sum(
             p.waiting_time
             for p in self.ready_queue
+        )
+
+        max_waiting = max(
+            [p.waiting_time for p in self.ready_queue],
+            default=0
         )
 
         max_age = max(
@@ -203,10 +211,9 @@ class PreemptiveCPUSchedulerEnv(gym.Env):
             default=0
         )
 
-        reward = (
-            - total_waiting
-            - max_age
-        )
+        reward -= total_waiting
+
+        reward -= max_age
 
         if self.ready_queue:
 
@@ -215,9 +222,14 @@ class PreemptiveCPUSchedulerEnv(gym.Env):
                 for p in self.ready_queue
             )
 
-            if selected_process.remaining_time <= shortest_remaining:
+            if (
+                selected_process.remaining_time
+                == shortest_remaining
+            ):
 
                 reward += 5
+
+        reward -= 0.1 * max_waiting
 
         next_state = self.get_state()
 
