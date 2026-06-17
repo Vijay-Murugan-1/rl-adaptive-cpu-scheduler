@@ -32,7 +32,7 @@ class PreemptiveCPUSchedulerEnv(gym.Env):
         self.observation_space = spaces.Box(
             low=0,
             high=100,
-            shape=(self.num_processes * 4,),
+            shape=(self.num_processes * 5,),
             dtype=float
         )
 
@@ -100,12 +100,15 @@ class PreemptiveCPUSchedulerEnv(gym.Env):
                 process.remaining_time,
                 process.waiting_time,
                 process.priority,
-                process.age
+                process.age,
+                process.remaining_time /
+                max(process.burst_time, 1)
             ])
 
-        while len(state) < self.num_processes * 4:
+        while len(state) < self.num_processes * 5:
 
             state.extend([
+                0,
                 0,
                 0,
                 0,
@@ -141,6 +144,15 @@ class PreemptiveCPUSchedulerEnv(gym.Env):
             action = len(self.ready_queue) - 1
 
         selected_process = self.ready_queue[action]
+        shortest_remaining = min(
+            p.remaining_time
+            for p in self.ready_queue
+        )
+
+        picked_shortest = (
+            selected_process.remaining_time
+            == shortest_remaining
+        )
 
         start_time = self.current_time
 
@@ -215,19 +227,9 @@ class PreemptiveCPUSchedulerEnv(gym.Env):
 
         reward -= max_age
 
-        if self.ready_queue:
+        if picked_shortest:
 
-            shortest_remaining = min(
-                p.remaining_time
-                for p in self.ready_queue
-            )
-
-            if (
-                selected_process.remaining_time
-                == shortest_remaining
-            ):
-
-                reward += 5
+            reward += 5
 
         reward -= 0.1 * max_waiting
 

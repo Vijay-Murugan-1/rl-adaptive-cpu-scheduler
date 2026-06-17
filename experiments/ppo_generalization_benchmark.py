@@ -10,7 +10,7 @@ from core.metrics import (
 )
 
 model = PPO.load(
-    "ppo_cpu_scheduler"
+    "ppo_cpu_scheduler_general"
 )
 
 workloads = [

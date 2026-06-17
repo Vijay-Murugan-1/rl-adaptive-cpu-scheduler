@@ -14,6 +14,17 @@ print("Creating PPO Model...")
 model = PPO(
     "MlpPolicy",
     env,
+
+    learning_rate=3e-4,
+    n_steps=2048,
+    batch_size=64,
+    n_epochs=10,
+    gamma=0.99,
+    gae_lambda=0.95,
+    clip_range=0.2,
+    ent_coef=0.01,
+    vf_coef=0.5,
+
     verbose=1
 )
 

@@ -144,7 +144,6 @@ class CPUSchedulerEnv(gym.Env):
             ])
 
         return state
-
     def step(self, action):
 
         if len(self.ready_queue) == 0:
@@ -229,7 +228,6 @@ class CPUSchedulerEnv(gym.Env):
             [p.age for p in self.ready_queue],
             default=0
         )
-
         reward = (
             - total_waiting
             - 2 * max_age
