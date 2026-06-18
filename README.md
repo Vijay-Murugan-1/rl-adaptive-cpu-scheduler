@@ -146,7 +146,7 @@ Results showed:
 
 ### PPO Generalization
 
-![Generalization](resultsscreenshots/ppo-generalization.png)
+![Generalization](results/screenshots/ppo-generalization.png)
 
 ### Fairness Analysis
 
