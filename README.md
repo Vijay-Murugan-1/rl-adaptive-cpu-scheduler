@@ -132,13 +132,25 @@ Results showed:
 
 ## Interactive Dashboard
 
-The project includes a React + TypeScript dashboard for:
+### Overview
 
-* Benchmark Visualization
-* PPO Generalization Analysis
-* Fairness Evaluation
-* Stability Analysis
-* Research Conclusions
+![Overview](results/screenshots/overview-dashboard.png)
+
+### Pipeline
+
+![Pipeline](results/screenshots/pipeline-overview.png)
+
+### Classical Benchmark
+
+![Benchmark](results/screenshots/classical-benchmark.png)
+
+### PPO Generalization
+
+![Generalization](resultsscreenshots/ppo-generalization.png)
+
+### Fairness Analysis
+
+![Fairness](results/screenshots/fairness-analysis.png)
 
 ---
 
