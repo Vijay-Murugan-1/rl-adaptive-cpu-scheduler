@@ -1,177 +1,159 @@
 # RL-Based Adaptive CPU Scheduler
 
-A Reinforcement Learning based CPU Scheduling simulator that compares traditional scheduling algorithms with PPO-based adaptive schedulers across multiple workload types.
+A Reinforcement Learning based CPU Scheduling framework that investigates whether Proximal Policy Optimization (PPO) can learn effective CPU scheduling policies through interaction with a simulated operating-system environment.
 
-## Features
+The project benchmarks PPO against classical scheduling algorithms and evaluates performance across multiple workload distributions, fairness metrics, and multi-seed stability experiments.
+
+---
+
+## Key Features
 
 ### Classical Scheduling Algorithms
 
-- FCFS (First Come First Serve)
-- SJF (Shortest Job First)
-- Round Robin
-- Priority Scheduling
-- SRTF (Shortest Remaining Time First)
+* FCFS (First Come First Serve)
+* SJF (Shortest Job First)
+* Round Robin
+* Priority Scheduling
+* SRTF (Shortest Remaining Time First)
 
 ### Reinforcement Learning Schedulers
 
-- PPO-based Non-Preemptive Scheduler
-- PPO-based Preemptive Scheduler
-- Custom Gymnasium Environments
-- Stable-Baselines3 Integration
+* PPO-based Non-Preemptive Scheduler
+* PPO-based Preemptive Scheduler
+* Custom Gymnasium Environments
+* Stable-Baselines3 Integration
 
-### Workload Types
+### Workload Categories
 
-- Normal Workloads
-- CPU-Bound Workloads
-- I/O-Bound Workloads
-- Starvation-Oriented Workloads
-- Mixed Workloads
+* Normal
+* CPU-Bound
+* IO-Bound
+* Starvation-Oriented
+* Mixed
 
-### Evaluation & Analysis
+### Evaluation Framework
 
-- PPO vs Classical Scheduler Comparison
-- PPO vs SRTF Comparison
-- Cross-Workload Generalization Testing
-- Workload Benchmarking Framework
+* Classical Scheduler Benchmarking
+* PPO Generalization Analysis
+* Multi-Seed Stability Evaluation
+* Fairness Analysis
+* Starvation Analysis
+* Interactive Dashboard Visualization
 
-## Performance Metrics
-
-- Average Waiting Time
-- Maximum Waiting Time
-- Average Turnaround Time
-- Throughput
-- Context Switch Count
+---
 
 ## Tech Stack
 
-- Python
-- Gymnasium
-- Stable-Baselines3 (PPO)
-- NumPy
-- Matplotlib
+* Python
+* Gymnasium
+* Stable-Baselines3
+* PPO
+* NumPy
+* Matplotlib
+* React
+* TypeScript
+* Recharts
 
-## Project Structure
+---
 
-```text
-core/
-schedulers/
-workloads/
-rl_environment/
-rl_training/
-visualization/
-experiments/
-```
+## Project Architecture
 
-## Run the Project
+Workload Generator ->
+CPU Scheduling Environment ->
+State Representation ->
+PPO Agent ->
+Training Loop ->
+Evaluation Framework ->
+Interactive Dashboard ->
 
-### Compare Classical Schedulers
+---
 
-```bash
-python -m experiments.compare_schedulers
-```
+## Classical Scheduler Benchmark
 
-### Train PPO Agent (Non-Preemptive)
+| Algorithm   | Avg WT | Avg TAT | Throughput | Context Switches |
+| ----------- | ------ | ------- | ---------- | ---------------- |
+| FCFS        | 14.8   | 19.0    | 0.23       | 9                |
+| SJF         | 8.3    | 12.5    | 0.23       | 9                |
+| Round Robin | 13.3   | 17.5    | 0.23       | 22               |
+| Priority    | 12.7   | 16.9    | 0.23       | 9                |
 
-```bash
-python -m rl_training.train_ppo
-```
+Key Observation:
 
-### Evaluate PPO Agent
+SJF achieved the lowest waiting and turnaround times due to access to burst-time information.
 
-```bash
-python -m rl_training.evaluate_agent
-```
+---
 
-### Compare PPO vs Classical Schedulers
+## PPO Generalization Results
 
-```bash
-python -m rl_training.compare_rl_vs_classical
-```
+Single PPO policy evaluated across unseen workloads.
 
-### Train PPO Agent (Preemptive)
+| Workload   | Avg WT | Avg TAT |
+| ---------- | ------ | ------- |
+| Normal     | 10.9   | 15.1    |
+| CPU-Bound  | 18.3   | 24.8    |
+| IO-Bound   | 0.6    | 2.0     |
+| Starvation | 10.7   | 18.9    |
+| Mixed      | 2.4    | 5.5     |
 
-```bash
-python -m rl_training.train_ppo_preemptive
-```
+Key Observation:
 
-### Evaluate Preemptive PPO Agent
+The PPO policy generalized successfully across all workload categories without workload-specific retraining.
 
-```bash
-python -m rl_training.evaluate_preemptive_agent
-```
+---
 
-### Compare PPO vs SRTF
+## Fairness Analysis
 
-```bash
-python -m rl_training.compare_preemptive_rl_vs_srtf
-```
+| Algorithm   | Avg WT | Max WT | Fairness Score | Starved Processes |
+| ----------- | ------ | ------ | -------------- | ----------------- |
+| FCFS        | 20.8   | 61     | 0.565          | 4                 |
+| SJF         | 10.7   | 33     | 0.520          | 1                 |
+| Round Robin | 11.4   | 38     | 0.366          | 3                 |
+| Priority    | 19.9   | 50     | 0.508          | 4                 |
+| PPO         | 10.7   | 50     | 0.383          | 1                 |
 
-### Benchmark Classical Schedulers Across Workloads
+Note:
 
-```bash
-python -m experiments.workload_benchmark
-```
+Lower fairness score indicates lower waiting-time disparity among processes. PPO achieved better fairness than SJF and Priority scheduling while matching SJF in starvation prevention.
 
-### PPO Generalization Benchmark
+---
 
-```bash
-python -m experiments.ppo_generalization_benchmark
-```
+## Multi-Seed Evaluation
 
-### Full Workload Comparison
+PPO was evaluated across multiple random seeds and workload distributions.
 
-```bash
-python -m experiments.full_workload_comparison
-```
+Results showed:
 
-## Experimental Results
+* Consistent behavior across workload types.
+* Stable performance under seed variation.
+* Strongest performance on IO-Bound and Mixed workloads.
+* CPU-Bound workloads remained the most challenging scenario.
 
-### Non-Preemptive Scheduling
+---
 
-| Algorithm | Avg WT | Avg TAT |
-|-----------|--------|---------|
-| SJF | 10.7 | 18.9 |
-| PPO | 10.7 | 18.9 |
+## Interactive Dashboard
 
-PPO converged to SJF-level performance on starvation-oriented workloads.
+The project includes a React + TypeScript dashboard for:
 
-### Preemptive Scheduling
+* Benchmark Visualization
+* PPO Generalization Analysis
+* Fairness Evaluation
+* Stability Analysis
+* Research Conclusions
 
-| Algorithm | Avg WT | Avg TAT |
-|-----------|--------|---------|
-| SRTF | 5.8 | 14.0 |
-| PPO | 10.1 | 18.3 |
-
-PPO performance improved significantly through reward engineering and extended training.
-
-### PPO Generalization Results
-
-The PPO agent was trained exclusively on starvation-oriented workloads and evaluated on unseen workload types.
-
-| Workload | Avg WT | Avg TAT |
-|-----------|--------|---------|
-| Normal | 11.9 | 16.1 |
-| CPU Bound | 19.4 | 25.9 |
-| I/O Bound | 0.5 | 1.9 |
-| Starvation | 10.7 | 18.9 |
-| Mixed | 3.5 | 6.6 |
-
-Key Finding:
-
-> A PPO agent trained on starvation-oriented workloads demonstrated partial generalization to unseen workload types, matching SJF performance on starvation and I/O-bound workloads while remaining competitive on mixed workloads.
+---
 
 ## Future Work
 
-- Fairness-Aware Reward Functions
-- Starvation Reduction Metrics
-- Multi-Core CPU Scheduling
-- Dynamic Workload Generation
-- DQN Scheduler
-- A2C Scheduler
-- Interactive Dashboard
-- Training Curve Analysis
-- Cross-Seed Robustness Evaluation
+* Multi-Core CPU Scheduling
+* Fairness-Aware Reward Functions
+* Real Workload Trace Evaluation
+* DQN Scheduler
+* A2C Scheduler
+* Transformer-Based Scheduling Policies
+
+---
 
 ## Author
 
-**Vijay**
+Vijay B V
+
